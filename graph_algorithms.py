@@ -54,9 +54,56 @@ def get_furthest_node(g: Graph, node: int) -> tuple[int, int]:
 # 12                  w.parent := v
 # 13                  Q.enqueue(w)
 
+
+
 def get_clustering_coefficient(graph: Graph) -> float:
 	raise NotImplementedError
 
+def get_degen_ordering(g: Graph):
+	n = g.get_num_nodes() #n is number of vertices
+	L = {}
+	d = [0]*n
+	D = [[]]*(n-1) # D[i] contains a list of the vertices v that are not already in L for which dv = i.
+	#set it to equal n-1 empty lists just in case. could probably do better in terms of space efficiency... 
+	#this assumes a node could have as many neighbors as possible
+	for v in n:
+		d[v] = g.get_neighbors(v)
+		D[d[v]].append[v] #place vertex a at degree equal to it's calculated neighbors. do this for all nodes.
+	
+	N = []*n #Initially, Nv is empty for every vertex v.
+
+	
+
+	k = 0
+	for index in range (0, n):
+		#Let i be the smallest index such that D[i] is nonempty.
+		i = 0
+		for ind in range (len(D), -1, -1):
+			if D[ind] != []:
+				i = ind
+				break
+			else:
+				D.pop()
+		k = max(k,i)
+		#Select a vertex v from D[i]. Add v to the beginning of L and remove it from D[i]. 
+		v = D[i].pop()
+		#Mark v as being in L (e.g., using a hash table, HL).
+		L.add(v)
+		
+		#For each neighbor w of v not already in L
+		v_neighbors = g.get_neighbors(v)
+		for neighbor in v_neighbors:
+			if neighbor in L:
+				v_neighbors.remove(neighbor)
+		for w in v_neighbors:
+			d[w] = d[w] - 1
+			D[d[w]].append[w]
+			N[v].append(w)
+		
+		for neighbor in N[v]:
+			if neighbor not in L:
+				dv += 1
+	
 
 def get_degree_distribution(graph: Graph) -> dict[int, int]:
 	raise NotImplementedError

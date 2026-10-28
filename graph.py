@@ -1,14 +1,20 @@
-# explanations for member functions are provided in requirements.py
-# each file that uses a graph should import it from this file.
 
 from collections.abc import Iterable
 
 class Graph:
 	num_nodes: int
 	edges: set[tuple[int,int]]
+	neighbors: list[set]
 	def __init__(self, num_nodes: int, edges: Iterable[tuple[int, int]]):
 		self.num_nodes = num_nodes
 		self.edges = edges
+		self.neighbors = [set() for _ in range(num_nodes)]
+		for edge in edges:
+			#if edge[0] == node:
+			self.neighbors[edge[0]].add(edge[1])
+			self.neighbors[edge[1]].add(edge[0])
+
+			
 
 	def get_num_nodes(self) -> int:
 		return self.num_nodes
@@ -16,31 +22,15 @@ class Graph:
 	def get_num_edges(self) -> int:
 		return len(self.edges)
 
+	def get_degree(self, v: int) -> int:
+		return len(self.neighbors[v])
+				
 	def get_neighbors(self, node: int) -> Iterable[int]:
-		neighbors = set([])
-		for edge in self.edges:
-			if edge[0] == node:
-				neighbors.add(edge[1])
-			elif edge[1] == node:
-				neighbors.add(edge[0])
-		return neighbors
+		return self.neighbors[node]
 	
 	def insert_edge(self, edge: tuple[int, int]):
 		self.edges.extend(edge)
 		return
-
-	# feel free to define new methods in addition to the above
-	# fill in the definitions of each required member function (above),
-	# and for any additional member functions you define
-# Explanations for Graph public member functions
-#
-# init(): initialize the graph a given number of nodes and given edges.
-#         edges are represented as tuples (u, v), where each edge is between node with index u and
-#         node with index v.
-#         the autograder will never add duplicate edges to the graph.
-# get_num_nodes(): returns the number of nodes in the graph.
-# get_num_edges(): returns the number of edges in the graph.
-# get_neighbors(): given a node index, return an iterable type over the collection of its neighbors.
-#                  the iterable type can be a list, set, generator, etc.
-#                  each neighbor should appear exactly once.
-
+	
+	def are_neighbors(self, u, w):
+		return w in self.neighbors[u]
